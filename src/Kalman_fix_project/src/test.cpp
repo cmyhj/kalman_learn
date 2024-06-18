@@ -20,9 +20,9 @@ class Simulator : public rclcpp::Node {
 
 public:
     Simulator(std::string name) : Node(name) {
-        Kalman_fillter_CA = new Kalman(0.01);
-        Kalman_fillter_CA->Q_set(30);
-        Kalman_fillter_CA->R_set(0.05);
+        Kalman_fillter_CA = new Kalman(0.001);
+        Kalman_fillter_CA->Q_set(100);
+        Kalman_fillter_CA->R_set(0.005);
 
 
 
@@ -67,13 +67,12 @@ private:
         Eigen::Matrix<double, 1, 1> meassure;
         Eigen::Vector2d CA_fillter_output;
         meassure << simulate_pos_x;
-
+        CA_fillter_output = Kalman_fillter_CA->predict();
+        RCLCPP_INFO(this->get_logger(), "kalman->predict()");
         if (!isunsuccessful) {
-            CA_fillter_output = Kalman_fillter_CA->predict();
-            RCLCPP_INFO(this->get_logger(), "kalman->predict()");
+            CA_fillter_output = Kalman_fillter_CA->update(meassure);
+            RCLCPP_INFO(this->get_logger(), "kalman->update(meassure)");
         }
-        CA_fillter_output = Kalman_fillter_CA->update(meassure);
-        RCLCPP_INFO(this->get_logger(), "kalman->update(meassure)");
 
         geometry_msgs::msg::Vector3 fillted;
         fillted.x = CA_fillter_output(0);
