@@ -21,8 +21,8 @@ class Simulator : public rclcpp::Node {
 public:
     Simulator(std::string name) : Node(name) {
         Kalman_fillter_CA = new Kalman(0.01);
-        Kalman_fillter_CA->Q_set(100);
-        Kalman_fillter_CA->R_set(0.01);
+        Kalman_fillter_CA->Q_set(30);
+        Kalman_fillter_CA->R_set(0.05);
 
 
 
