@@ -8,11 +8,10 @@ Kalman::Kalman(double _time) : T(_time) {
     x.setZero();
     P.setIdentity();
 
-    A << 1, T, 0.5 * T * T,
-            0, 1, T,
-            0, 0, 1;
+    A << 1, T,
+        0, 1;
 
-    H << 1, 0, 0;
+    H << 1, 0;
 
     P.setIdentity();
 
@@ -21,8 +20,8 @@ Kalman::Kalman(double _time) : T(_time) {
 };
 
 void Kalman::Q_set(double qx) {
-    Eigen::Vector3d G;
-    G << T * T * T / 6.0, T * T / 2.0, T;
+    Eigen::Vector2d G;
+    G << T * T / 2.0, T;
     Q = G * qx * G.transpose();
 }
 
@@ -37,6 +36,9 @@ Eigen::VectorXd Kalman::predict() {
 }
 
 Eigen::VectorXd Kalman::update(const Eigen::VectorXd &z_meas) {
+    if (abs(z_meas(0)-x(0))>0.5){
+        return x;
+    }
 
     Eigen::MatrixXd Ht = H.transpose();
 
@@ -44,7 +46,7 @@ Eigen::VectorXd Kalman::update(const Eigen::VectorXd &z_meas) {
 
     x = x + K * (z_meas - H * x);
 
-    P = (Eigen::Matrix3d::Identity() - K * H) * P;
+    P = (Eigen::Matrix2d::Identity() - K * H) * P;
 
     return x;
 }

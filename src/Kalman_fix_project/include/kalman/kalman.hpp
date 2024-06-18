@@ -20,15 +20,15 @@ private:
 
     //温馨提示,匀加速和匀速模型的维数不一样哦
 
-    Eigen::Matrix3d A;
-    Eigen::Matrix<double,1,3> H;
+    Eigen::Matrix2d A;
+    Eigen::Matrix<double,1,2> H;
 
-    Eigen::Matrix3d P;
+    Eigen::Matrix2d P;
 
-    Eigen::Matrix3d Q;
+    Eigen::Matrix2d Q;
     Eigen::Matrix<double,1,1> R;
 
-    Eigen::Vector3d x;
+    Eigen::Vector2d x;
 
 
     double T;
